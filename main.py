@@ -9,7 +9,7 @@ import wave
 import matplotlib.pyplot as plt
 from pydub import AudioSegment
 
-uart_handle = serial.Serial('COM8', 921600)
+uart_handle = None#serial.Serial('COM8', 921600)
 frame = [0]
 #uart_handle.close()
 
@@ -85,8 +85,8 @@ while (True):
 def nothing(x):
     pass
 
-
-filter_img = cv2.imread("capture2.jpeg")
+"""
+filter_img = cv2.imread("capture2.jpg")
 gray = cv2.cvtColor(filter_img, cv2.COLOR_BGR2GRAY)
 
 cv2.namedWindow("Title")
@@ -99,18 +99,23 @@ while(1):
         k = 1
 
     kernel = np.ones((k, k), np.float32) / (k ** 2)
-    """
+    
     kernel = np.array([
         [0.1, 0.1, 0.1],
         [0.1, 0.9, 0.1],
         [0.1, 0.1, 0.1]
     ])
-    """
-    #dst = cv2.filter2D(filter_img, -1, kernel)
+    
+    dst = cv2.filter2D(filter_img, -1, kernel)
     #dst = cv2.medianBlur(filter_img, k + (k%2 + 1))
-    dst = cv2.Laplacian(gray, cv2.CV_8U, ksize=3)
+    #dst = cv2.Laplacian(gray, cv2.CV_8U, ksize=3)
     cv2.imshow('Title', dst)
+
+cv2.destroyAllWindows()
 """
+
+
+
 sound = AudioSegment.from_wav('audio_sample.wav')
 sound = sound.set_channels(1)
 sound.export('out.wav', format='wav')
@@ -126,9 +131,16 @@ print(np.size(freq_domain))
 
 n_channels = audio.getnchannels()
 
+li = []
+for i in range (0, 512):
+    li.append(i)
+
 #print(freq_domain)
 plt.figure(1)
-plt.title('Audio Sample')
-plt.plot(freq_domain)
+#plt.title('Audio Sample')
+#plt.plot(freq_domain)
+fig, (one, two) = plt.subplots(2)
+fig.suptitle('Audio Sample')
+one.plot(li, freq_domain)
 plt.show()
-"""
+
